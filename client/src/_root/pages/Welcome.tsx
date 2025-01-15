@@ -1,12 +1,11 @@
 import Button from "../../components/Button";
-import logo from "/img/logo-welcome.svg";
 
 const Welcome = () => {
   return (
     <main className="gradient-primary w-full h-screen flex justify-center pt-52 text-white">
       <div>
         <div className="flex flex-col justify-center items-center gap-[25px]">
-          <img src={logo} alt="logo" />
+          <img src="/img/logo-welcome.svg" alt="logo" />
           <div className="text-center text-xl font-light">
             <h2>
               <span className="font-semibold">Find</span> friends and
@@ -24,8 +23,8 @@ const Welcome = () => {
             Cookies Policy.
           </p>
           <div className="flex flex-col gap-4">
-            <Button label="Create account" />
-            <Button label="Sign in" />
+            <Button label="Create account" isLink={true} href="/sign-up" />
+            <Button label="Sign in" isLink={true} href="/sign-in" />
           </div>
         </div>
       </div>
