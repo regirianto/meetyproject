@@ -3,7 +3,7 @@ import logo from "/img/logo-welcome.svg";
 
 const Welcome = () => {
   return (
-    <main className="gradient-primary w-full h-screen flex justify-center items-center text-white">
+    <main className="gradient-primary w-full h-screen flex justify-center pt-52 text-white">
       <div>
         <div className="flex flex-col justify-center items-center gap-[25px]">
           <img src={logo} alt="logo" />
@@ -16,13 +16,16 @@ const Welcome = () => {
             </h2>
           </div>
         </div>
-        <div>
-          <p>
-            By tapping “Sign in”, you agree to our Terms. Learn how we process
-            your data in our Privacy Policy and Cookies Policy.
+        <div className="absolute left-10 right-10 bottom-14 text-center">
+          <p className="text-[10px] leading-[18px] mb-7">
+            By tapping “Sign in”, you agree to our Terms.
+            <br />
+            Learn how we process your data in our <br /> Privacy Policy and
+            Cookies Policy.
           </p>
-          <div>
-            <Button />
+          <div className="flex flex-col gap-4">
+            <Button label="Create account" />
+            <Button label="Sign in" />
           </div>
         </div>
       </div>
