@@ -10,7 +10,7 @@ const App = () => {
     <main>
       <Routes>
         {/* Welcome page */}
-        <Route path="/welcome" element={<Welcome />} />
+        <Route path="/" element={<Welcome />} />
 
         {/* Public Routes */}
         <Route element={<AuthLayout />}>
@@ -20,7 +20,7 @@ const App = () => {
 
         {/* Private Routes */}
         <Route element={<RootLayout />}>
-          <Route index element={<Home />} />
+          <Route path="/home" element={<Home />} />
         </Route>
       </Routes>
     </main>
