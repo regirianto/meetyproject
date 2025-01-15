@@ -1,4 +1,18 @@
+import { useState } from "react";
+
 const SignUpForm = () => {
+  // structure form
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    phone: {
+      country_code: "+62",
+      number: "",
+    },
+    password: "",
+    confirmPassword: "",
+  });
+
   return (
     <main>
       <div className="text-green-primary ">
