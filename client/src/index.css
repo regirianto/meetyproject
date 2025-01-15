@@ -13,13 +13,13 @@
 
 @layer base {
   * {
-    @apply font-main;
+    @apply font-main -tracking-[-2%];
   }
 }
 
 @layer components {
   .main-container {
-    @apply px-10 py-14;
+    @apply px-10 pt-14 pb-10;
   }
 }
 
