@@ -17,6 +17,12 @@
   }
 }
 
+@layer components {
+  .main-container {
+    @apply px-10 py-14;
+  }
+}
+
 @layer utilities {
   .gradient-primary {
     @apply bg-gradient-to-b from-50% from-green-primary to-accent-blue;
