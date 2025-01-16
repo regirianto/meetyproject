@@ -22,8 +22,29 @@ const SignUpForm = () => {
           below to join us.
         </p>
       </div>
-      <div>
-        <form></form>
+      <div className="my-14">
+        <form className="flex flex-col gap-6">
+          <div className="flex flex-col gap-[11px]">
+            <label htmlFor="username" className="text-sm">
+              Username
+            </label>
+            <input
+              type="text"
+              className="w-full bg-[#EFFAF5] py-4 px-4 rounded-lg border-[1px] shadow-sm placeholder:text-xs text-xs font-light"
+              placeholder="Enter your username"
+            />
+          </div>
+          <div className="flex flex-col gap-[11px]">
+            <label htmlFor="username" className="text-sm">
+              Email
+            </label>
+            <input
+              type="email"
+              className="w-full bg-[#EFFAF5] py-4 px-4 rounded-lg border-[1px] shadow-sm placeholder:text-xs text-xs font-light"
+              placeholder="Enter your email"
+            />
+          </div>
+        </form>
       </div>
     </main>
   );
