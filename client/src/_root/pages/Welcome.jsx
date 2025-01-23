@@ -1,6 +1,6 @@
 import Button from "../../components/Button";
 import ViewportHeight from "../../hook/ViewportHeight";
-import logo from "/img/logo-white.svg";
+import logo from "../../assets/img/logo-white.svg";
 
 const Welcome = () => {
   ViewportHeight();
@@ -28,13 +28,13 @@ const Welcome = () => {
         <div className="flex flex-col gap-3">
           <Button
             label="Create account"
-            type="primary"
+            type="secondary"
             isLink={true}
             href="/sign-up"
           />
           <Button
             label="Sign in"
-            type="secondary"
+            type="outline"
             isLink={true}
             href="/sign-in"
           />

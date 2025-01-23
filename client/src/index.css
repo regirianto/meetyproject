@@ -75,3 +75,9 @@
     height: calc(var(--vh, 1vh) * 100);
   }
 }
+
+@layer components {
+  .input-class {
+    @apply h-12 bg-tertiary px-4 text-xs placeholder:text-xs rounded-lg border-[1px] border-neutral-300 focus:outline-none focus:border-primary;
+  }
+}
