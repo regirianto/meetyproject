@@ -1,14 +1,14 @@
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import { facebookIcon, googleIcon, linkedinIcon } from "../assets/img/icons";
 import Button from "../components/Button";
-import arrowLeft from "../assets/img/icons/arrow-left.svg";
+// import arrowLeft from "../assets/img/icons/arrow-left.svg";
 import ViewportHeight from "../hook/ViewportHeight";
 
 const AuthLayout = () => {
-  const navigate = useNavigate();
-  const handleBack = () => {
-    navigate(-1);
-  };
+  // const navigate = useNavigate();
+  // const handleBack = () => {
+  //   navigate(-1);
+  // };
 
   ViewportHeight();
 
@@ -25,7 +25,7 @@ const AuthLayout = () => {
           : null
       } bg-white text-black`}
     >
-      <div className="absolute top-4">
+      {/* <div className="absolute top-4">
         <Button
           onClick={handleBack}
           addClasses="border-[1px] h-10 px-2"
@@ -33,7 +33,7 @@ const AuthLayout = () => {
           type="secondary"
           isLink={false}
         />
-      </div>
+      </div> */}
       <Outlet />
       <div className="flex flex-col gap-4 mt-4 items-center">
         <p className="text-sm ">~ Or continue with ~</p>
