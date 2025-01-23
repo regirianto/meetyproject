@@ -80,4 +80,12 @@
   .input-class {
     @apply h-12 bg-tertiary px-4 text-xs placeholder:text-xs rounded-lg border-[1px] border-neutral-300 focus:outline-none focus:border-primary;
   }
+
+  .input-badge {
+    @apply text-xs italic text-neutral-400;
+  }
+
+  .checkbox-gender {
+    @apply flex justify-between items-center w-full h-12 bg-tertiary px-4 text-xs rounded-lg border-[1px];
+  }
 }
