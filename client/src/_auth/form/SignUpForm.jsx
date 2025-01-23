@@ -1,14 +1,10 @@
 import Button from "../../components/Button";
+import Header from "../../components/Header";
 
 const SignUpForm = () => {
   return (
-    <main className="flex flex-col gap-5">
-      <div className="flex flex-col gap-1 text-primary">
-        <h2 className="text-2xl font-semibold">Welcome!</h2>
-        <p className="text-sm font-light leading-6">
-          Let&apos;s get started by creating your account..
-        </p>
-      </div>
+    <main className="flex flex-col gap-8">
+      <Header heading="Welcome!" desc="Let's get started by creating your account.." />
 
       {/* form */}
       <div>
@@ -54,7 +50,12 @@ const SignUpForm = () => {
             />
           </div>
           <div className="mt-3">
-            <Button label="Create account" type="primary" isLink={false} />
+            <Button
+              label="Create account"
+              type="primary"
+              isLink={true}
+              href="/base-profile"
+            />
           </div>
         </form>
       </div>
