@@ -3,7 +3,7 @@ import logo from "../../assets/img/logo.svg";
 
 const SignInForm = () => {
   return (
-    <main className="flex flex-col items-center gap-10">
+    <main className="flex flex-col px-3 gap-10">
       <div className="flex flex-col items-center">
         <div>
           <img src={logo} alt="logo meety" />
