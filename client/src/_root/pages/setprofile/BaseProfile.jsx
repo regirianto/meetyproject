@@ -5,7 +5,7 @@ import Button from "../../../components/Button";
 
 const BaseProfile = () => {
   return (
-    <main className="relative mt-10 flex flex-col gap-4">
+    <main className="template-parent-box">
       <Header
         heading="Show off your best self!"
         desc="Complete your profile to make meaningful connections and let others get to know the real you"
@@ -13,10 +13,10 @@ const BaseProfile = () => {
 
       {/* form */}
       <div>
-        <form className="flex flex-col gap-6">
+        <form className="form-base-profile">
           {/* First Name */}
           <div className="flex flex-col gap-2">
-            <label htmlFor="firstname" className="font-medium text-sm">
+            <label htmlFor="firstname">
               What is your first name?
             </label>
             <input
@@ -30,9 +30,7 @@ const BaseProfile = () => {
           </div>
           {/* Birthday */}
           <div className="flex flex-col gap-2">
-            <label htmlFor="birthday" className="font-medium text-sm">
-              When is your birthday?
-            </label>
+            <label htmlFor="birthday">When is your birthday?</label>
             <div className="flex gap-6">
               <div className="flex flex-col gap-2">
                 <LabelInput labelFor="day" label="Day" />
@@ -65,7 +63,7 @@ const BaseProfile = () => {
           </div>
           {/* gender */}
           <div className="flex flex-col gap-2">
-            <label htmlFor="firstname" className="font-medium text-sm">
+            <label htmlFor="firstname">
               What is your gender?
             </label>
             <div className="checkbox-gender">
@@ -93,7 +91,12 @@ const BaseProfile = () => {
             <p className="input-badge"></p>
           </div>
           <div>
-            <Button label="Next" type="primary" isLink={false} />
+            <Button
+              label="Next"
+              type="primary"
+              isLink={true}
+              href="/activity"
+            />
           </div>
         </form>
       </div>
