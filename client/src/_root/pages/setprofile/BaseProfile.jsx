@@ -86,7 +86,11 @@ const BaseProfile = () => {
               />
               <input type="radio" className="" id="female" />
             </div>
-            <p className="input-badge">Do not show my gender on profile</p>
+            <label className="input-badge flex items-center gap-2">
+              <input type="checkbox" />
+              Do not show my gender on profile
+            </label>
+            <p className="input-badge"></p>
           </div>
           <div>
             <Button label="Next" type="primary" isLink={false} />
