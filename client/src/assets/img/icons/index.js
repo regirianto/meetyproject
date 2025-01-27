@@ -4,3 +4,4 @@ export { default as linkedinIcon } from "./linkedin-icon.svg";
 export { default as maleIcon } from "./male-icon.svg";
 export { default as femaleIcon } from "./female-icon.svg";
 export { default as cameraIcon } from "./camera-icon.svg";
+export { default as PlusIcon } from "./PlusIcon.jsx";
