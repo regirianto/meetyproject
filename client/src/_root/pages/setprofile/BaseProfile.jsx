@@ -16,9 +16,7 @@ const BaseProfile = () => {
         <form className="form-base-profile">
           {/* First Name */}
           <div className="flex flex-col gap-2">
-            <label htmlFor="firstname">
-              What is your first name?
-            </label>
+            <label htmlFor="firstname">What is your first name?</label>
             <input
               type="text"
               placeholder="First Name"
@@ -63,9 +61,7 @@ const BaseProfile = () => {
           </div>
           {/* gender */}
           <div className="flex flex-col gap-2">
-            <label htmlFor="firstname">
-              What is your gender?
-            </label>
+            <label htmlFor="firstname">What is your gender?</label>
             <div className="checkbox-gender">
               <LabelInput
                 label="Male"
@@ -90,7 +86,7 @@ const BaseProfile = () => {
             </label>
             <p className="input-badge"></p>
           </div>
-          <div>
+          <div className="button-box-next">
             <Button
               label="Next"
               type="primary"
