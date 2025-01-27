@@ -13,7 +13,7 @@ const SetProfileLayout = () => {
 
   return (
     <main className="main-container">
-      <div className="absolute top-4">
+      <div className="fixed top-4">
         <Button
           onClick={handleBack}
           addClasses="border-[1px] h-10 px-2"
