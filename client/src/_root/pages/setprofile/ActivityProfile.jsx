@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Button from "../../../components/Button";
 import Header from "../../../components/Header";
 import { PlusIcon } from "../../../assets/img/icons";
@@ -6,7 +6,6 @@ import { interestList } from "../../../constant";
 
 const ActivityProfile = () => {
   const [isChecked, setIsChecked] = useState([]);
-  const [scrollActive, setScrollActive] = useState(false);
 
   const handleCheckbox = (id, event) => {
     if (event.target.checked) {
@@ -17,21 +16,6 @@ const ActivityProfile = () => {
       setIsChecked((prev) => prev.filter((checkedId) => checkedId !== id));
     }
   };
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY;
-      const targetHeight = 500;
-
-      scrollPosition > targetHeight
-        ? setScrollActive(true)
-        : setScrollActive(false);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   return (
     <main className="template-parent-box">
