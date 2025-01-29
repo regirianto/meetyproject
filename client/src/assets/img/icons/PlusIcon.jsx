@@ -1,11 +1,11 @@
 /* eslint-disable react/prop-types */
-const PlusIcon = ({ color = "#0F172A", size = 16 }) => {
+const PlusIcon = ({ color = "#0F172A", size = 16, style }) => {
   return (
-    <div className="flex items-center">
+    <div className={`flex items-center ${style}`}>
       <svg
         width={size}
         height={size}
-        viewBox={`0 0 ${size} ${size}`}
+        viewBox={`0 0 16 16`}
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
