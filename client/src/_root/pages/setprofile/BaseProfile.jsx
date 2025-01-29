@@ -66,7 +66,7 @@ const BaseProfile = () => {
               <LabelInput
                 label="Male"
                 labelFor="male"
-                addClasses="text-primary"
+                addClasses="text-primary w-full h-full"
                 icon={<img src={maleIcon} alt="male icon" />}
               />
               <input type="radio" className="" id="male" />
@@ -75,7 +75,7 @@ const BaseProfile = () => {
               <LabelInput
                 label="Female"
                 labelFor="female"
-                addClasses="text-primary"
+                addClasses="text-primary w-full h-full"
                 icon={<img src={femaleIcon} alt="female icon" />}
               />
               <input type="radio" className="" id="female" />
