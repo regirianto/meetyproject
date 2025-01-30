@@ -1,7 +1,7 @@
 
 const Home = () => {
   return (
-    <main className="main-container">
+    <main className="mb-10">
       Hii
     </main>
   )
