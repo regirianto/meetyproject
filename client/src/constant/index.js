@@ -19,3 +19,11 @@ export const interestList = [
   { id: 17, label: "Photography" },
   { id: 18, label: "Reading" },
 ];
+
+export const menuList = [
+  { id: 0, label: "Profile", icon: "ProfileIcon" },
+  { id: 1, label: "Chat", icon: "ChatIcon" },
+  { id: 2, label: "Find", icon: "findIcon" },
+  { id: 3, label: "Loved", icon: "lovedIcon" },
+  { id: 4, label: "Settings", icon: "settingsIcon" },
+];
