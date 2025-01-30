@@ -5,3 +5,8 @@ export { default as maleIcon } from "./male-icon.svg";
 export { default as femaleIcon } from "./female-icon.svg";
 export { default as cameraIcon } from "./camera-icon.svg";
 export { default as PlusIcon } from "./PlusIcon.jsx";
+export { default as ProfileIcon } from "./ProfileIcon.jsx";
+export { default as ChatIcon } from "./ChatIcon.jsx";
+export { default as findIcon } from "./find-icon.svg";
+export { default as lovedIcon } from "./loved-icon.svg";
+export { default as settingsIcon } from "./settings-icon.svg";
