@@ -66,6 +66,34 @@
     font-style: normal;
   }
 
+  @font-face {
+    font-family: "Monoglyceride";
+    src: url("/fonts/monogly/monog.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: "Monoglyceride";
+    src: url("/fonts/monogly/monog_db.ttf") format("truetype");
+    font-weight: 600;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: "Monoglyceride";
+    src: url("/fonts/monogly/monog_b.ttf") format("truetype");
+    font-weight: 700;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: "Monoglyceride";
+    src: url("/fonts/monogly/monog_eb.ttf") format("truetype");
+    font-weight: 800;
+    font-style: normal;
+  }
+
   * {
     font-family: "Poppins", sans-serif;
   }
@@ -73,6 +101,10 @@
   .main-container {
     @apply w-full px-6 pt-10;
     height: calc(var(--vh, 1vh) * 100);
+  }
+
+  .app-container {
+    @apply w-full px-4 pt-5;
   }
 
   .template-parent-box {
