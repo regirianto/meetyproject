@@ -9,6 +9,7 @@ import AuthLayout from "./_auth/AuthLayout";
 import SignUpForm from "./_auth/form/SignUpForm";
 import SignInForm from "./_auth/form/SignInForm";
 import SetProfileLayout from "./_root/SetProfileLayout";
+import Profile from "./_root/pages/Profile";
 
 const App = () => {
   return (
@@ -23,6 +24,7 @@ const App = () => {
 
         <Route path="/" element={<RootLayout />}>
           <Route path="/home" element={<Home />} />
+          <Route path="/profile" element={<Profile />} />
         </Route>
 
         <Route path="/" element={<SetProfileLayout />}>
