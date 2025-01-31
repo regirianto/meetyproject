@@ -4,7 +4,7 @@ import { menuList } from "../constant";
 
 const RootLayout = () => {
   return (
-    <main className="app-container">
+    <main className="app-container relative">
       {/* Heading */}
       <div className="flex justify-between items-center">
         <div>
@@ -21,14 +21,15 @@ const RootLayout = () => {
       <Outlet />
 
       {/* Menu bar */}
-      <div>
+      <div className="fixed left-0 right-0 bottom-0 px-4 py-4 border-t-2">
         <ul className="flex justify-between items-center">
           {menuList.map((item) => (
             <li key={item.id}>
               <button
-                className="flex flex-col gap-2 items-center"
+                className="flex flex-col items-center h-14 justify-between"
                 type="button"
               >
+                <item.icon size={28} />
                 <span className="text-sm">{item.label}</span>
               </button>
             </li>
