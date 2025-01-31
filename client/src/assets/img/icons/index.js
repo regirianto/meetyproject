@@ -10,3 +10,5 @@ export { default as ChatIcon } from "./ChatIcon.jsx";
 export { default as FindIcon } from "./FindIcon.jsx";
 export { default as LovedIcon } from "./LovedIcon.jsx";
 export { default as SettingsIcon } from "./SettingsIcon.jsx";
+export { default as heartLeftIcon } from "./heartleft-icon.svg";
+export { default as heartRightIcon } from "./heartright-icon.svg";
