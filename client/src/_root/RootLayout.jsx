@@ -4,9 +4,9 @@ import { menuList } from "../constant";
 
 const RootLayout = () => {
   return (
-    <main className="app-container relative">
+    <main className="app-container">
       {/* Heading */}
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center z-50">
         <div>
           <img src={logo} alt="logo" />
         </div>
@@ -21,10 +21,10 @@ const RootLayout = () => {
       <Outlet />
 
       {/* Menu bar */}
-      <div className="fixed left-0 right-0 bottom-0 px-4 py-4 border-t-2">
-        <ul className="flex justify-between items-center">
+      <div className="fixed left-0 right-0 bottom-0 px-2 py-4 border-t-2 bg-white">
+        <ul className="flex justify-between items-center gap-1">
           {menuList.map((item) => (
-            <li key={item.id}>
+            <li key={item.id} className="w-1/5 flex justify-center">
               <button
                 className="flex flex-col items-center h-14 justify-between"
                 type="button"
