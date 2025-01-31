@@ -133,3 +133,9 @@
     @apply flex flex-col gap-6 font-medium text-sm;
   }
 }
+
+@layer utilities {
+  .black-gradient {
+    @apply bg-gradient-to-b from-transparent to-black;
+  }
+}
