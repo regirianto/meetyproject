@@ -17,7 +17,7 @@ const Home = () => {
             <img src={heartLeftIcon} alt="heart icon" />
           </div>
           <div className="absolute right-0 top-1/2">
-            <img src={heartRightIcon} alt="heart icon" />
+            <img src={heartRightIcon} alt="heart ico" />
           </div>
 
           <span className="bg-tertiary w-max text-primary border-2 border-primary text-sm italic font-medium px-2 py-1 rounded-full">
