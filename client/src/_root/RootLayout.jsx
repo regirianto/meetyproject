@@ -1,8 +1,17 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import logo from "../assets/img/logo-horizontal.svg";
 import { menuList } from "../constant";
 
 const RootLayout = () => {
+  // Log out function
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/sign-in");
+  };
+
   return (
     <main className="app-container">
       {/* Heading */}
@@ -10,6 +19,15 @@ const RootLayout = () => {
         <div>
           <img src={logo} alt="logo" />
         </div>
+
+        {/* Log out button */}
+        <button
+          onClick={handleLogout}
+          className="bg-red-500 px-4 py-2 rounded text-white"
+        >
+          Logout
+        </button>
+
         <div className="w-36">
           <h4 className="font-secondary w-full uppercase text-right text-primary font-bold">
             find what you&apos;re searching for
