@@ -10,6 +10,7 @@ import SignUpForm from "./_auth/form/SignUpForm";
 import SignInForm from "./_auth/form/SignInForm";
 import SetProfileLayout from "./_root/SetProfileLayout";
 import Profile from "./_root/pages/Profile";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const App = () => {
   return (
@@ -22,7 +23,14 @@ const App = () => {
           <Route path="/sign-in" element={<SignInForm />} />
         </Route>
 
-        <Route path="/" element={<RootLayout />}>
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <RootLayout />
+            </ProtectedRoute>
+          }
+        >
           <Route path="/home" element={<Home />} />
           <Route path="/profile" element={<Profile />} />
         </Route>
