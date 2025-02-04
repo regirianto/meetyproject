@@ -31,6 +31,13 @@ const BaseProfile = () => {
       "0"
     )}-${form.birthDay.padStart(2, "0")}`;
 
+    console.log("📤 Sending Data:", {
+      userId: user.id,
+      firstName: form.firstName,
+      birthDate,
+      gender: form.gender,
+    });
+
     try {
       const res = await saveBaseProfile({
         userId: user.id,
@@ -39,6 +46,10 @@ const BaseProfile = () => {
         gender: form.gender,
       });
       alert(res.data.message);
+
+      // Save Profile ID to Local Storage
+      localStorage.setItem("profileId", res.data.profileId);
+
       navigate("/activity");
     } catch (error) {
       console.error("Error: ", error);
