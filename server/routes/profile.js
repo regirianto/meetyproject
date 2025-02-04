@@ -38,11 +38,23 @@ router.post("/base-profile", (req, res) => {
   });
 });
 
+// Get all interests
+router.get("/interests", (req, res) => {
+  const query = "SELECT * FROM interests";
+  db.query(query, (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(results);
+  });
+});
+
 // Save User Interests
 router.post("/activity", (req, res) => {
+  console.log("Recieved Data: ", req.body);
+
   const { profileId, interestId } = req.body;
 
   if (!profileId || !interestId || !interestId.length) {
+    console.log("❌ Missing data: ", req.body);
     return res
       .status(400)
       .json({ error: "Please select at least one interest" });
@@ -50,10 +62,14 @@ router.post("/activity", (req, res) => {
 
   const values = interestId.map((interestId) => [profileId, interestId]);
 
-  const query = "INSER INTO user_interests (profile_id, interest_id) VALUES ?";
+  const query = "INSERT INTO user_interests (profile_id, interest_id) VALUES ?";
   db.query(query, [values], (err, result) => {
-    if (err) return res.status(500).json({ error: err.message });
-    res.status(201).json({ message: "Interests Saved" });
+    if (err) {
+      console.error("❌ Database Error:", err.message);
+      return res.status(500).json({ error: err.message });
+    }
+    console.log("✅ Interests Saved:", result);
+    res.status(201).json({ message: "Interests saved!" });
   });
 });
 
