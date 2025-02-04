@@ -82,13 +82,14 @@ const storage = multer.diskStorage({
     cb(null, Date.now() + path.extname(file.originalname));
   },
 });
+
 const upload = multer({ storage });
 
 // Save Photo
 router.post("/set-photo", upload.array("photos", 6), (req, res) => {
   const { profileId } = req.body;
 
-  if (!profileId || !req.files.length === 0) {
+  if (!profileId || !req.files || !req.files.length === 0) {
     return res.status(400).json({ error: "Please select a photo" });
   }
 
