@@ -35,7 +35,14 @@ const App = () => {
           <Route path="/profile" element={<Profile />} />
         </Route>
 
-        <Route path="/" element={<SetProfileLayout />}>
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <SetProfileLayout />
+            </ProtectedRoute>
+          }
+        >
           <Route path="/base-profile" element={<BaseProfile />} />
           <Route path="/activity" element={<ActivityProfile />} />
           <Route path="/set-photo" element={<PhotoProfile />} />
