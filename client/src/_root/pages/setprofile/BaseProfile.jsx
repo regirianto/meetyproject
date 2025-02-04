@@ -2,8 +2,49 @@ import Header from "../../../components/Header";
 import LabelInput from "../../../components/LabelInput";
 import { maleIcon, femaleIcon } from "../../../assets/img/icons";
 import Button from "../../../components/Button";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { saveBaseProfile } from "../../../api";
 
 const BaseProfile = () => {
+  const [form, setForm] = useState({
+    firstName: "",
+    birthDay: "",
+    birthMonth: "",
+    birthYear: "",
+    gender: "",
+  });
+
+  const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Combine Birth Date Input
+    const birthDate = `${form.birthYear}-${form.birthMonth.padStart(
+      2,
+      "0"
+    )}-${form.birthDay.padStart(2, "0")}`;
+
+    try {
+      const res = await saveBaseProfile({
+        userId: user.id,
+        firstName: form.firstName,
+        birthDate,
+        gender: form.gender,
+      });
+      alert(res.data.message);
+      navigate("/activity");
+    } catch (error) {
+      console.error("Error: ", error);
+    }
+  };
+
   return (
     <main className="template-parent-box">
       <Header
@@ -13,7 +54,7 @@ const BaseProfile = () => {
 
       {/* form */}
       <div>
-        <form className="form-base-profile">
+        <form onSubmit={handleSubmit} className="form-base-profile">
           {/* First Name */}
           <div className="flex flex-col gap-2">
             <label htmlFor="firstname">What is your first name?</label>
@@ -21,6 +62,8 @@ const BaseProfile = () => {
               type="text"
               placeholder="First Name"
               className="input-class"
+              name="firstName"
+              onChange={handleChange}
             />
             <p className="input-badge">
               The name you enter will appear on your profile.
@@ -36,6 +79,10 @@ const BaseProfile = () => {
                   type="number"
                   placeholder="DD"
                   className="input-class w-full"
+                  name="birthDay"
+                  min="1"
+                  max="31"
+                  onChange={handleChange}
                 />
               </div>
               <div className="flex flex-col gap-2">
@@ -44,6 +91,10 @@ const BaseProfile = () => {
                   type="number"
                   placeholder="MM"
                   className="input-class w-full"
+                  name="birthMonth"
+                  min="1"
+                  max="12"
+                  onChange={handleChange}
                 />
               </div>
               <div className="flex flex-col gap-2">
@@ -52,6 +103,10 @@ const BaseProfile = () => {
                   type="number"
                   placeholder="YYYY"
                   className="input-class w-full"
+                  name="birthYear"
+                  min="1900"
+                  max="2025"
+                  onChange={handleChange}
                 />
               </div>
             </div>
@@ -69,7 +124,14 @@ const BaseProfile = () => {
                 addClasses="text-primary w-full h-full"
                 icon={<img src={maleIcon} alt="male icon" />}
               />
-              <input type="radio" className="" id="male" />
+              <input
+                type="radio"
+                name="gender"
+                className=""
+                id="male"
+                value="male"
+                onChange={handleChange}
+              />
             </div>
             <div className="checkbox-gender">
               <LabelInput
@@ -78,7 +140,14 @@ const BaseProfile = () => {
                 addClasses="text-primary w-full h-full"
                 icon={<img src={femaleIcon} alt="female icon" />}
               />
-              <input type="radio" className="" id="female" />
+              <input
+                type="radio"
+                name="gender"
+                className=""
+                id="female"
+                value="female"
+                onChange={handleChange}
+              />
             </div>
             <label className="input-badge flex items-center gap-2">
               <input type="checkbox" />
@@ -90,7 +159,7 @@ const BaseProfile = () => {
             <Button
               label="Next"
               type="primary"
-              isLink={true}
+              isLink={false}
               href="/activity"
             />
           </div>
