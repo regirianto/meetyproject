@@ -7,3 +7,11 @@ const API = axios.create({
 
 export const signUp = (data) => API.post("/auth/sign-up", data);
 export const signIn = (data) => API.post("/auth/sign-in", data);
+export const saveBaseProfile = (data) =>
+  API.post("/profile/base-profile", data);
+export const saveInterestProfile = (data) =>
+  API.post("/profile/activity", data);
+export const uploadPhotoProfile = (data) =>
+  API.post("/profile/set-photo", data, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
