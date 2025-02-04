@@ -25,7 +25,12 @@ const SignInForm = () => {
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
 
-      navigate("/home");
+      // if user not have profile or new account
+      if (res.data.needsProfile) {
+        navigate("/base-profile");
+      } else {
+        navigate("/home");
+      }
     } catch (error) {
       console.error("LOGIN error: ", error.response?.data || error);
       setError(error.response?.data?.error || "Something ain't right");
