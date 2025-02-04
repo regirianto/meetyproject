@@ -52,17 +52,26 @@ router.post("/sign-in", (req, res) => {
       return res.status(401).json({ error: "Username or Password Wrong" });
     }
 
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
-      expiresIn: "1d",
-    });
+    // Check if the user has a profile
+    const profileQuery = "SELECT * FROM profiles WHERE user_id = ?";
+    db.query(profileQuery, [user.id], (err, profileResults) => {
+      if (err) return res.status(500).json({ error: err.message });
 
-    res.json({
-      message: "Sign-in Successfully",
-      token,
-      user: {
-        id: user.id,
-        username: user.username,
-      },
+      const needsProfile = profileResults.length === 0; // the mean user has no profile
+
+      const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+        expiresIn: "1d",
+      });
+
+      res.json({
+        message: "Sign-in Successfully",
+        token,
+        user: {
+          id: user.id,
+          username: user.username,
+        },
+        needsProfile,
+      });
     });
   });
 });
