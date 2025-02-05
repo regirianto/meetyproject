@@ -12,3 +12,4 @@ export { default as LovedIcon } from "./LovedIcon.jsx";
 export { default as SettingsIcon } from "./SettingsIcon.jsx";
 export { default as heartLeftIcon } from "./heartleft-icon.svg";
 export { default as heartRightIcon } from "./heartright-icon.svg";
+export { default as editIcon } from "./EditIcon.jsx";
