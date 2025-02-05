@@ -29,7 +29,7 @@ import {
 } from "../assets/img/icons";
 
 export const menuList = [
-  { id: 0, label: "Profile", icon: ProfileIcon, path: "profile" },
+  { id: 0, label: "Profile", icon: ProfileIcon, path: "user-profile" },
   { id: 1, label: "Chat", icon: ChatIcon, path: "chat" },
   { id: 2, label: "Find", icon: FindIcon, path: "home" },
   { id: 3, label: "Loved", icon: LovedIcon, path: "loved" },
@@ -38,7 +38,7 @@ export const menuList = [
 
 export const pageHeadings = {
   "/home": "find what you're searching for",
-  "/profile": "set your personality",
+  "/user-profile": "set your personality",
   "/chat": "chat to spark a connection",
   "/loved": "look your connection",
   "/settings": "manage your account",
