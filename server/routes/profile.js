@@ -108,4 +108,99 @@ router.post("/set-photo", upload.array("photos", 6), (req, res) => {
   });
 });
 
+// Profile Page
+router.get("/user-profile/:userId", (req, res) => {
+  const { userId } = req.params;
+
+  // fetch profile details
+  const profileQuery = `
+    SELECT p.id AS profile_id, p.name, p.birth_date, p.gender, COALESCE(p.bio, 'Add bio') AS bio, COALESCE(p.about, 'Add your profile') AS about, p.last_active_at FROM profiles p WHERE p.user_id = ?
+  `;
+
+  db.query(profileQuery, [userId], (err, profileResults) => {
+    if (err) {
+      console.error("❌ Database Error (Profile):", err.message);
+      return res.status(500).json({ error: err.message });
+    }
+    if (profileResults.length === 0) {
+      return res.status(404).json({ error: "Profile not found" });
+    }
+
+    let profile = profileResults[0];
+
+    // Convert birth_date to age
+    const birthDate = new Date(profile.birth_date);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && today.getDate() < birthDate.getDate())
+    ) {
+      age--;
+    }
+
+    profile.age = age;
+    delete profile.birth_date;
+
+    // fetch first profile photo
+    const photoQuery = `
+      SELECT image FROM gallery WHERE profile_id = ? ORDER BY id ASC LIMIT 1
+    `;
+
+    db.query(photoQuery, [profile.profile_id], (err, photoResults) => {
+      if (err) {
+        console.error("❌ Database Error (Photo):", err.message);
+        return res.status(500).json({ error: err.message });
+      }
+
+      profile.photo_profile =
+        photoResults.length > 0
+          ? `http://localhost:5000/uploads/${photoResults[0].image}`
+          : null;
+
+      // Fetch user interest
+      const interestsQuery = `
+        SELECT i.id, i.interest_name FROM user_interests ui JOIN interests i ON ui.interest_id = i.id WHERE ui.profile_id = ?
+      `;
+
+      db.query(
+        interestsQuery,
+        [profile.profile_id],
+        (err, interestsResults) => {
+          if (err) {
+            console.error("❌ Database Error (Interests):", err.message);
+            return res.status(500).json({ error: err.message });
+          }
+
+          profile.interests = interestsResults;
+
+          // all gallery
+          const galleryQuery = `
+            SELECT image FROM gallery WHERE profile_id = ? ORDER BY id DESC
+          `;
+
+          db.query(
+            galleryQuery,
+            [profile.profile_id],
+            (err, galleryResults) => {
+              if (err) {
+                console.error("❌ Database Error (Gallery):", err.message);
+                return res.status(500).json({ error: err.message });
+              }
+
+              profile.gallery = galleryResults.map(
+                (img) => `http://localhost:5000/uploads/${img.image}`
+              );
+
+              // Return profile
+              res.json(profile);
+            }
+          );
+        }
+      );
+    });
+  });
+});
+
 export default router;
