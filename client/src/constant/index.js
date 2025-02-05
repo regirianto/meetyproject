@@ -29,9 +29,9 @@ import {
 } from "../assets/img/icons";
 
 export const menuList = [
-  { id: 0, label: "Profile", icon: ProfileIcon },
-  { id: 1, label: "Chat", icon: ChatIcon },
-  { id: 2, label: "Find", icon: FindIcon },
-  { id: 3, label: "Loved", icon: LovedIcon },
-  { id: 4, label: "Settings", icon: SettingsIcon },
+  { id: 0, label: "Profile", icon: ProfileIcon, path: "/profile" },
+  { id: 1, label: "Chat", icon: ChatIcon, path: "/chat" },
+  { id: 2, label: "Find", icon: FindIcon, path: "/home" },
+  { id: 3, label: "Loved", icon: LovedIcon, path: "/loved" },
+  { id: 4, label: "Settings", icon: SettingsIcon, path: "/settings" },
 ];
