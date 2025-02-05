@@ -16,3 +16,4 @@ export const uploadPhotoProfile = (data) =>
   API.post("/profile/set-photo", data, {
     headers: { "Content-Type": "multipart/form-data" },
   });
+export const getUserProfile = (userId) => API.get(`/profile/user-profile/${userId}`);
