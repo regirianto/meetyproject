@@ -114,7 +114,7 @@ router.get("/user-profile/:userId", (req, res) => {
 
   // fetch profile details
   const profileQuery = `
-    SELECT p.id AS profile_id, p.name, p.birth_date, p.gender, COALESCE(p.bio, 'Add bio') AS bio, COALESCE(p.about, 'Add your profile') AS about, p.last_active_at FROM profiles p WHERE p.user_id = ?
+    SELECT p.id AS profile_id, p.name, DATE_FORMAT(p.birth_date, '%Y-%m-%d') AS birth_date, p.gender, COALESCE(p.bio, 'Add bio') AS bio, COALESCE(p.about, 'Add your profile') AS about, u.phone, u.email, p.last_active_at FROM profiles p JOIN users u ON p.user_id = u.id WHERE p.user_id = ?
   `;
 
   db.query(profileQuery, [userId], (err, profileResults) => {
@@ -127,6 +127,9 @@ router.get("/user-profile/:userId", (req, res) => {
     }
 
     let profile = profileResults[0];
+
+    // Log the profile object
+    console.log("Profile Data:", profile);
 
     // Convert birth_date to age
     const birthDate = new Date(profile.birth_date);
@@ -201,6 +204,111 @@ router.get("/user-profile/:userId", (req, res) => {
       );
     });
   });
+});
+
+// Edit Profile
+router.put("/edit-profile/:userId", upload.single("photo"), (req, res) => {
+  const { userId } = req.params;
+  const { name, bio, about, gender, birth_date, phone, email, interests } =
+    req.body;
+
+  // Debugging
+  console.log("Received Data: ", req.body);
+
+  const photo_profile = req.file ? req.file.filename : null;
+
+  // Update profile info
+  const updateQuery = `
+    UPDATE profiles SET name = ?, bio = ?, about = ?, gender = ?, birth_date = ? WHERE user_id = ?
+  `;
+
+  db.query(
+    updateQuery,
+    [name, bio, about, gender, birth_date, userId],
+    (err, result) => {
+      if (err) return res.status(500).json({ error: err.message });
+
+      // Update user phone & email from users table
+      const updateUserQuery = `
+      UPDATE users SET phone = ?, email = ? WHERE id = ?
+    `;
+
+      db.query(updateUserQuery, [phone, email, userId], (err) => {
+        if (err) return res.status(500).json({ error: err.message });
+
+        // Update profile picture if provided
+        if (photo_profile) {
+          const updatePhotoQuery = `
+          INSERT INTO gallery (profile_id, image) VALUES ((SELECT id FROM profiles WHERE user_id = ? ), ?)
+        `;
+
+          db.query(updatePhotoQuery, [userId, photo_profile], (err) => {
+            if (err) return res.status(500).json({ error: err.message });
+          });
+        }
+
+        // Update interest
+        if (interests) {
+          const profileQuery = `SELECT id FROM profiles WHERE user_id = ?`;
+          db.query(profileQuery, [userId], (err, profileResults) => {
+            if (err) return res.status(500).json({ error: err.message });
+
+            const profileId = profileResults[0].id;
+            // fetch current interests
+            const getExistingInterestQuery = `SELECT interest_id FROM user_interests WHERE profile_id = ?`;
+            db.query(
+              getExistingInterestQuery,
+              [profileId],
+              (err, existingInterestsResults) => {
+                if (err) return res.status(500).json({ error: err.message });
+
+                const existingInterests = existingInterestsResults.map(
+                  (row) => row.interest_id
+                );
+                const newInterests = JSON.parse(interests).map(Number);
+
+                // Find interests to add and remove
+                const interestsToAdd = newInterests.filter(
+                  (id) => !existingInterests.includes(id)
+                );
+                const interestsToRemove = existingInterests.filter(
+                  (id) => !newInterests.includes(id)
+                );
+
+                // Add new Interests
+                if (interestsToAdd.length > 0) {
+                  const insertQuery = `INSERT INTO user_interests (profile_id, interest_id) VALUES ?`;
+                  const values = interestsToAdd.map((id) => [profileId, id]);
+                  db.query(insertQuery, [values], (err) => {
+                    if (err)
+                      return res.status(500).json({ error: err.message });
+                  });
+                }
+
+                // Remove unselected interests
+                if (interestsToRemove.length > 0) {
+                  const deleteQuery = `DELETE FROM user_interests WHERE profile_id = ? AND interest_id IN (?)`;
+                  db.query(
+                    deleteQuery,
+                    [profileId, interestsToRemove],
+                    (err) => {
+                      if (err)
+                        return res.status(500).json({ error: err.message });
+                    }
+                  );
+                }
+                res
+                  .status(200)
+                  .json({ message: "Profile updated succesfully" });
+              }
+            );
+          });
+        } else {
+          res.status(200).json({ message: "Profile updated successfully!" });
+        }
+      });
+    }
+  );
 });
 
 export default router;
