@@ -151,7 +151,7 @@ const EditProfile = () => {
                     src={
                       profile.photo_profile.startsWith("blob")
                         ? profile.photo_profile
-                        : `http://localhost:5000/uploads/${profile.photo_profile}`
+                        : profile.photo_profile
                     }
                     alt="Profile"
                     className="w-full h-full object-cover"
