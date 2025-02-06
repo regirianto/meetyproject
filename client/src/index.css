@@ -129,6 +129,10 @@
     @apply flex justify-between items-center w-full h-12 bg-tertiary px-4 text-xs rounded-lg border-[1px];
   }
 
+  .checkbox-gender-profile {
+    @apply flex justify-between items-center w-max h-12 bg-tertiary px-3 gap-2 text-xs rounded-lg border-[1px];
+  }
+
   .form-base-profile {
     @apply flex flex-col gap-6 font-medium text-sm;
   }
