@@ -11,6 +11,7 @@ import SignInForm from "./_auth/form/SignInForm";
 import SetProfileLayout from "./_root/SetProfileLayout";
 import Profile from "./_root/pages/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
+import EditProfile from "./_root/pages/EditProfile";
 
 const App = () => {
   return (
@@ -33,6 +34,7 @@ const App = () => {
         >
           <Route path="/home" element={<Home />} />
           <Route path="/user-profile" element={<Profile />} />
+          <Route path="/edit-profile" element={<EditProfile />} />
         </Route>
 
         <Route
