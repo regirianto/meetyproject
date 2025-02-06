@@ -2,10 +2,12 @@ import { useEffect, useState } from "react";
 import EditIcon from "../../assets/img/icons/EditIcon";
 import Line from "../../components/Line";
 import { getUserProfile } from "../../api";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const [profile, setProfile] = useState(null);
   const user = JSON.parse(localStorage.getItem("user"));
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -48,7 +50,9 @@ const Profile = () => {
             {profile.bio || <span className="italic text-sm">Add bio</span>}
           </p>
           <div className="absolute -top-2 -right-7 cursor-pointer">
-            <EditIcon color="#267F53" size={20} />
+            <button type="button" onClick={() => navigate("/edit-profile")}>
+              <EditIcon color="#267F53" size={20} />
+            </button>
           </div>
         </div>
         {/* Loved & Be Loved */}
