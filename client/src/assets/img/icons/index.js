@@ -13,3 +13,4 @@ export { default as SettingsIcon } from "./SettingsIcon.jsx";
 export { default as heartLeftIcon } from "./heartleft-icon.svg";
 export { default as heartRightIcon } from "./heartright-icon.svg";
 export { default as editIcon } from "./EditIcon.jsx";
+export { default as closeIcon } from "./CloseIcon.jsx";
