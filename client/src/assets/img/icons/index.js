@@ -14,3 +14,6 @@ export { default as heartLeftIcon } from "./heartleft-icon.svg";
 export { default as heartRightIcon } from "./heartright-icon.svg";
 export { default as editIcon } from "./EditIcon.jsx";
 export { default as closeIcon } from "./CloseIcon.jsx";
+export { default as UpIcon } from "./ArrowUpIcon.jsx";
+export { default as DownIcon } from "./ArrowDownIcon.jsx";
+export { default as LoveIcon } from "./LoveIcon.jsx";
