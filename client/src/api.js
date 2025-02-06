@@ -16,4 +16,9 @@ export const uploadPhotoProfile = (data) =>
   API.post("/profile/set-photo", data, {
     headers: { "Content-Type": "multipart/form-data" },
   });
-export const getUserProfile = (userId) => API.get(`/profile/user-profile/${userId}`);
+export const getUserProfile = (userId) =>
+  API.get(`/profile/user-profile/${userId}`);
+export const updateUserProfile = (userId, data) =>
+  API.put(`/profile/edit-profile/${userId}`, data, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
