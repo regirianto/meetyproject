@@ -102,9 +102,27 @@ router.post("/set-photo", upload.array("photos", 6), (req, res) => {
 
   db.query(query, [values], (err, result) => {
     if (err) return res.status(500).json({ error: err.message });
-    res
-      .status(201)
-      .json({ message: "Photo Uploaded!", uploadedFiles: photoPaths });
+
+    // If this is the first upload, set the first image as profile photo
+    const checkProfilePhotoQuery = `SELECT image FROM gallery WHERE profile_id = ? ORDER BY id ASC LIMIT 1`;
+    db.query(checkProfilePhotoQuery, [profileId], (err, photoResults) => {
+      if (err) return res.status(500).json({ error: err.message });
+
+      if (photoResults.length > 0) {
+        const firstPhoto = photoResults[0].image;
+        const setProfilePhotoQuery = `
+          UPDATE profiles SET photo_profile = ? WHERE id = ?
+        `;
+        db.query(setProfilePhotoQuery, [firstPhoto, profileId], (err) => {
+          if (err) return res.status(500).json({ error: err.message });
+        });
+      }
+      res.status(201).json({
+        message: "Photo Uploaded!",
+        uploadedFiles: photoPaths,
+        profilePhoto: `http://localhost:5000/uploads/${firstPhoto}`,
+      });
+    });
   });
 });
 
@@ -211,11 +229,12 @@ router.put("/edit-profile/:userId", upload.single("photo"), (req, res) => {
   const { userId } = req.params;
   const { name, bio, about, gender, birth_date, phone, email, interests } =
     req.body;
+  const newPhoto = req.file ? req.file.filename : null;
 
   // Debugging
   console.log("Received Data: ", req.body);
-
-  const photo_profile = req.file ? req.file.filename : null;
+  console.log("🛠 Updating Profile for user:", userId, "New Photo:", newPhoto);
+  console.log("📋 Form Data:", req.body);
 
   // Update profile info
   const updateQuery = `
@@ -226,7 +245,10 @@ router.put("/edit-profile/:userId", upload.single("photo"), (req, res) => {
     updateQuery,
     [name, bio, about, gender, birth_date, userId],
     (err, result) => {
-      if (err) return res.status(500).json({ error: err.message });
+      if (err) {
+        console.error("❌ Database Error (Profile Update):", err.message);
+        return res.status(500).json({ error: err.message });
+      }
 
       // Update user phone & email from users table
       const updateUserQuery = `
@@ -234,16 +256,26 @@ router.put("/edit-profile/:userId", upload.single("photo"), (req, res) => {
     `;
 
       db.query(updateUserQuery, [phone, email, userId], (err) => {
-        if (err) return res.status(500).json({ error: err.message });
+        if (err) {
+          console.error("❌ Database Error (User Update):", err.message);
+          return res.status(500).json({ error: err.message });
+        }
 
         // Update profile picture if provided
-        if (photo_profile) {
+        if (newPhoto) {
+          console.log("📸 New photo uploaded:", newPhoto);
+
           const updatePhotoQuery = `
           INSERT INTO gallery (profile_id, image) VALUES ((SELECT id FROM profiles WHERE user_id = ? ), ?)
         `;
 
-          db.query(updatePhotoQuery, [userId, photo_profile], (err) => {
-            if (err) return res.status(500).json({ error: err.message });
+          db.query(updatePhotoQuery, [userId, newPhoto], (err) => {
+            if (err) {
+              console.error("❌ Database Error (Photo Upload):", err.message);
+              return res.status(500).json({ error: err.message });
+            }
+
+            console.log("✅ Profile photo updated:", newPhoto);
           });
         }
 
@@ -297,9 +329,15 @@ router.put("/edit-profile/:userId", upload.single("photo"), (req, res) => {
                     }
                   );
                 }
-                res
-                  .status(200)
-                  .json({ message: "Profile updated succesfully" });
+
+                // ✅ Send success response **only once**
+                console.log("✅ Profile updated successfully!");
+                return res.status(200).json({
+                  message: "Profile updated successfully!",
+                  newProfilePhoto: newPhoto
+                    ? `http://localhost:5000/uploads/${newPhoto}`
+                    : null,
+                });
               }
             );
           });
