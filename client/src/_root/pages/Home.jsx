@@ -1,6 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSwipeable } from "react-swipeable";
-import Photo from "../../assets/img/person.jpeg";
 import {
   heartLeftIcon,
   heartRightIcon,
@@ -8,20 +7,87 @@ import {
   DownIcon,
   maleIcon,
   LoveIcon,
+  femaleIcon,
 } from "../../assets/img/icons"; // Added DownIcon
 import ModalHome from "../../components/ModalHome";
 import CloseIcon from "../../assets/img/icons/CloseIcon";
+import { getHomeProfiles, likeUser } from "../../api";
 
 const Home = () => {
   const [modalOpen, setModalOpen] = useState(false);
+  const user = JSON.parse(localStorage.getItem("user"));
+  const [profiles, setProfiles] = useState([]);
+  const [currentProfileIndex, setCurrentProfileIndex] = useState(0);
+
+  // Shuffle array
+  const shuffleArray = (array) => {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+    }
+    return array;
+  };
+
+  // ✅ Fetch daftar profil lawan jenis saat halaman dimuat
+  useEffect(() => {
+    const fetchProfiles = async () => {
+      try {
+        const res = await getHomeProfiles(user.id);
+        console.log("API Response:", res); // Log the entire response
+        const shuffledProfiles = shuffleArray(res.data);
+        setProfiles(shuffledProfiles); // Access data only if res is defined
+      } catch (error) {
+        console.error("❌ Error fetching home profiles:", error);
+      }
+    };
+
+    fetchProfiles();
+  }, [user.id]);
 
   // ✅ Swipe handlers
   const handlers = useSwipeable({
-    onSwipedLeft: () => console.log("❌ Swiped Left (Skip Profile)"),
-    onSwipedRight: () => console.log("💖 Swiped Right (Like Profile)"),
+    onSwipedLeft: () => handleSkip(),
+    onSwipedRight: () => handleLike(),
     preventScrollOnSwipe: true,
     trackMouse: true,
   });
+
+  // Handle swipe left (skip)
+  const handleSkip = () => {
+    // If at the last profile, reset to the first profile
+    if (currentProfileIndex < profiles.length - 1) {
+      setCurrentProfileIndex((prev) => prev + 1);
+    } else {
+      // Reset to the first profile
+      setCurrentProfileIndex(0);
+    }
+  };
+
+  // ✅ Handle swipe right (Like)
+  const handleLike = async () => {
+    try {
+      const likedUserId = profiles[currentProfileIndex]?.profile_id;
+      if (!likedUserId) return;
+
+      console.log("💖 Liking user:", likedUserId);
+      console.log("🆔 Current User ID: ", user.id);
+
+      const response = await likeUser(user.id, likedUserId);
+      console.log("✅ Like Response:", response.data);
+
+      handleSkip();
+    } catch (error) {
+      console.error("❌ Error liking user:", error);
+    }
+  };
+
+  // ✅ Jika tidak ada profil, tampilkan loading
+  if (profiles.length === 0) {
+    return <p className="text-center mt-10">🔄 Loading profiles...</p>;
+  }
+
+  // ✅ Ambil profil saat ini
+  const currentProfile = profiles[currentProfileIndex];
 
   return (
     <main className="mt-4">
@@ -32,7 +98,7 @@ const Home = () => {
         {/* Profile Image */}
         <div className="absolute top-0 bottom-0 left-0 right-0">
           <img
-            src={Photo}
+            src={currentProfile.photo_profile || "/default-profile.png"}
             alt="profile photo"
             className="w-full h-full object-cover"
           />
@@ -50,9 +116,11 @@ const Home = () => {
                   Photography
                 </span>
                 <div className="flex flex-col gap-4">
-                  <h3 className="text-3xl font-medium">Sanjaya, 29</h3>
+                  <h3 className="text-3xl font-medium">
+                    {currentProfile.name}, {currentProfile.age}
+                  </h3>
                   <p className="text-xs text-neutral-300">
-                    &quot;Cari teman sehobby dan sehappy.&quot;
+                    {currentProfile.bio || "No bio available"}
                   </p>
                 </div>
               </div>
@@ -72,7 +140,11 @@ const Home = () => {
 
         <ModalHome isOpen={modalOpen} onClose={() => setModalOpen(false)}>
           <div className="w-full h-[65vh]">
-            <img src={Photo} alt="" className="w-full h-full object-cover" />
+            <img
+              src={currentProfile.photo_profile || "/default-profile.png"}
+              alt=""
+              className="w-full h-full object-cover"
+            />
           </div>
 
           {/* Profile Box */}
@@ -86,82 +158,87 @@ const Home = () => {
             <div className="">
               <div className="flex gap-4">
                 <h3 className="text-2xl font-semibold mb-2">
-                  Sanjaya, <span className="font-medium">26</span>
+                  {currentProfile.name},{" "}
+                  <span className="font-medium">{currentProfile.age}</span>
                 </h3>
                 <h5 className="flex w-max h-max gap-2 text-xs bg-tertiary border-primary text-primary border-[1px] py-1 px-2 rounded-full mt-1">
-                  <img src={maleIcon} alt="" className="w-3" />
-                  Male
+                  <img
+                    src={
+                      currentProfile.gender === "male" ? maleIcon : femaleIcon
+                    }
+                    alt=""
+                    className="w-3"
+                  />
+                  {currentProfile.gender.charAt(0).toUpperCase() +
+                    currentProfile.gender.slice(1)}
                 </h5>
               </div>
               <p className="text-xs italic">
-                &quot;Cari teman sehobby dan sehappy.&quot;
+                {currentProfile.bio || "No bio available"}
               </p>
             </div>
 
             <div>
               <h4 className="text-sm font-medium mb-2">About me</h4>
               <p className="text-xs leading-relaxed">
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                Doloremque, aut harum culpa aperiam reiciendis impedit non?
-                Quas, sapiente cum. Repellendus aut labore, dolores quibusdam
-                ipsa voluptatum obcaecati quis reiciendis libero.
+                {currentProfile.about || "No additional details available."}
               </p>
             </div>
 
+            {/* Interest */}
             <div>
               <div className="flex flex-wrap gap-2 p-4 border-[1px] border-neutral-2 rounded-lg">
-                <span className="bg-tertiary text-primary font-normal w-max py-[4.5px] px-3 rounded-full border-[1px] border-primary text-[11.25px] flex">
-                  Story
-                </span>
-                <span className="bg-tertiary text-primary font-normal w-max py-[4.5px] px-3 rounded-full border-[1px] border-primary text-[11.25px] flex">
-                  Story
-                </span>
-                <span className="bg-tertiary text-primary font-normal w-max py-[4.5px] px-3 rounded-full border-[1px] border-primary text-[11.25px] flex">
-                  Story
-                </span>
+                {currentProfile.interests.length > 0 ? (
+                  currentProfile.interests.map((interest, index) => (
+                    <span
+                      key={index}
+                      className="bg-tertiary text-primary font-normal w-max py-[4.5px] px-3 rounded-full border-[1px] border-primary text-[11.25px] flex"
+                    >
+                      {interest}
+                    </span>
+                  ))
+                ) : (
+                  <span className="text-gray-500 text-xs">
+                    No interests listed
+                  </span>
+                )}
               </div>
             </div>
 
             <div>
               <div className="flex flex-wrap gap-2 p-4 border-[1px] border-neutral-2 rounded-lg">
                 <div className="grid grid-cols-3 gap-2">
-                  <div className="w-full h-[110px] bg-gray-300 rounded-md overflow-hidden">
-                    <img
-                      src={Photo}
-                      alt=""
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="w-full h-[110px] bg-gray-300 rounded-md overflow-hidden">
-                    <img
-                      src={Photo}
-                      alt=""
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="w-full h-[110px] bg-gray-300 rounded-md overflow-hidden">
-                    <img
-                      src={Photo}
-                      alt=""
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="w-full h-[110px] bg-gray-300 rounded-md overflow-hidden">
-                    <img
-                      src={Photo}
-                      alt=""
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
+                  {currentProfile.gallery.length > 0 ? (
+                    currentProfile.gallery.map((image, index) => (
+                      <div
+                        key={index}
+                        className="w-full h-[100px] bg-gray-300 rounded-md overflow-hidden"
+                      >
+                        <img
+                          src={image}
+                          alt={`Gallery image ${index + 1}`}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-gray-500 text-xs">No photos available</p>
+                  )}
                 </div>
               </div>
             </div>
 
             <div className="fixed bottom-0 left-0 right-0 flex gap-6 justify-center bg-gradient-to-b from-transparent to-white w-full px-4 py-6">
-              <button className="bg-white rounded-full p-2 shadow-lg">
+              <button
+                className="bg-white rounded-full p-2 shadow-lg"
+                onClick={handleSkip}
+              >
                 <CloseIcon color="#333333" size={36} />
               </button>
-              <button className="bg-white rounded-full p-2 shadow-lg">
+              <button
+                className="bg-white rounded-full p-2 shadow-lg"
+                onClick={handleLike}
+              >
                 <LoveIcon color="#267F53" size={36} />
               </button>
             </div>
