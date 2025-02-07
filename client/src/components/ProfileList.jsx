@@ -33,7 +33,7 @@ const ProfileList = ({ profiles, handleStartChat, message }) => {
                   className="bg-tertiary p-2 rounded-full"
                   onClick={() => {
                     console.log("Profile Data: ", profile);
-                    handleStartChat(profile.user_id);
+                    handleStartChat(profile);
                   }}
                 >
                   <ChatIcon color="#267F53" />

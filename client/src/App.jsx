@@ -16,6 +16,7 @@ import Loved from "./_root/pages/Loved";
 import Chat from "./_root/pages/Chat";
 import ChatList from "./_root/pages/ChatList";
 import Setting from "./_root/pages/Setting";
+import ChatRoom from "./_root/pages/ChatRoom";
 
 const App = () => {
   return (
@@ -43,6 +44,7 @@ const App = () => {
           <Route path="/chat" element={<ChatList />} />
           <Route path="/chat/:conversationId" element={<Chat />} />
           <Route path="/setting" element={<Setting />} />
+          <Route path="/chat-room" element={<ChatRoom />} />
         </Route>
 
         <Route

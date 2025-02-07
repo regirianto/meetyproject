@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getLikedYou, getYouLiked, startChat } from "../../api";
+import { getLikedYou, getYouLiked } from "../../api";
 import { useNavigate } from "react-router-dom";
 import ProfileList from "../../components/ProfileList";
 
@@ -34,24 +34,15 @@ const Loved = () => {
   }, [user?.id]);
 
   // ✅ Start a chat with a matched user
-  const handleStartChat = async (matchedUserId) => {
-    console.log("🔍 Received matchedUserId:", matchedUserId); // Debugging
-
-    if (!matchedUserId) {
-      console.error("❌ matchedUserId is undefined!");
+  const handleStartChat = (profile) => {
+    if (!profile) {
+      console.error("❌ No profile data provided!");
       return;
     }
 
-    try {
-      const res = await startChat(user.id, matchedUserId);
-      console.log("✅ Chat started, Conversation ID:", res.data.conversationId);
+    console.log("🚀 Start Chat with:", profile); // ✅ Log full profile to debug
 
-      if (res.data.conversationId) {
-        navigate(`/chat/${res.data.conversationId}`);
-      }
-    } catch (error) {
-      console.error("❌ Error starting chat:", error);
-    }
+    navigate("/chat-room", { state: { profile } });
   };
 
   return (

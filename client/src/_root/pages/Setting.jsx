@@ -1,10 +1,9 @@
-import UserIcon from "../../assets/img/icons/UserIcon";
 import ChevronRightIcon from "../../assets/img/icons/ChevronRightIcon";
 import KeyIcon from "../../assets/img/icons/KeyIcon";
 import TrashIcon from "../../assets/img/icons/TrashIcon";
 import LogoutIcon from "../../assets/img/icons/LogoutIcon";
 import { useNavigate } from "react-router-dom";
-import DeleteAcc from "../../components/DeleteAcc";
+import SettingItem from "../../components/SettingItem";
 
 const Setting = () => {
   const navigate = useNavigate();
@@ -20,44 +19,55 @@ const Setting = () => {
   return (
     <main className="mt-4 tracking-tight">
       <div className="flex flex-col">
-        <div className="flex justify-between items-center py-4 border-b-[1px] border-neutral-200">
-          <div className="w-2/3 flex gap-4">
-            <UserIcon color="#267F53" size={20} />
-            <button className="">Personal Information</button>
-          </div>
-          <div className="w-1/3 flex justify-end">
-            <ChevronRightIcon color="#267F53" />
-          </div>
-        </div>
-        <div className="flex justify-between items-center py-4 border-b-[1px] border-neutral-200">
-          <div className="w-2/3 flex gap-4">
-            <KeyIcon color="#267F53" size={20} />
-            <button className="">Change Password</button>
-          </div>
-          <div className="w-1/3 flex justify-end">
-            <ChevronRightIcon color="#267F53" />
-          </div>
-        </div>
-        <div className="flex justify-between items-center py-4 border-b-[1px] border-neutral-200">
-          <div className="w-2/3 flex gap-4">
-            <TrashIcon color="#267F53" size={20} />
-            <DeleteAcc>Delete Account</DeleteAcc>
-          </div>
-          <div className="w-1/3 flex justify-end">
-            <ChevronRightIcon color="#267F53" />
-          </div>
-        </div>
-        <div className="flex justify-between items-center py-4">
-          <div className="w-2/3 flex gap-4">
-            <LogoutIcon color="#267F53" size={20} />
-              <button className="" onClick={handleLogout}>
-                Log out
-              </button>
-          </div>
-          <div className="w-1/3 flex justify-end">
-            <ChevronRightIcon color="#267F53" />
-          </div>
-        </div>
+        <h1 className="font-semibold mb-2 text-lg">Application</h1>
+        <SettingItem
+          icon={KeyIcon}
+          label="App Update"
+          rightIcon={ChevronRightIcon}
+        />
+        <SettingItem
+          icon={KeyIcon}
+          label="Language"
+          rightIcon={ChevronRightIcon}
+        />
+        <SettingItem
+          icon={KeyIcon}
+          label="Theme"
+          rightIcon={ChevronRightIcon}
+        />
+        <SettingItem
+          icon={KeyIcon}
+          label="About"
+          rightIcon={ChevronRightIcon}
+        />
+
+        <h1 className="font-semibold mt-4 mb-2 text-lg">Account & Security</h1>
+        <SettingItem
+          icon={TrashIcon}
+          label="Privacy"
+          rightIcon={ChevronRightIcon}
+        />
+        <SettingItem
+          icon={TrashIcon}
+          label="Notification"
+          rightIcon={ChevronRightIcon}
+        />
+        <SettingItem
+          icon={TrashIcon}
+          label="Security"
+          rightIcon={ChevronRightIcon}
+        />
+        <SettingItem
+          icon={TrashIcon}
+          label="Help & Support"
+          rightIcon={ChevronRightIcon}
+        />
+        <SettingItem
+          icon={LogoutIcon}
+          label="Log out"
+          rightIcon={ChevronRightIcon}
+          onClick={handleLogout}
+        />
       </div>
     </main>
   );
