@@ -22,3 +22,8 @@ export const updateUserProfile = (userId, data) =>
   API.put(`/profile/edit-profile/${userId}`, data, {
     headers: { "Content-Type": "multipart/form-data" },
   });
+export const getHomeProfiles = (userId) => API.get(`/profile/home/${userId}`);
+export const likeUser = (likerId, likedId) =>
+  API.post(`likes/like`, { likerId, likedId });
+export const getLikedYou = (userId) => API.get(`likes/liked-you/${userId}`);
+export const getYouLiked = (userId) => API.get(`likes/you-liked/${userId}`);
