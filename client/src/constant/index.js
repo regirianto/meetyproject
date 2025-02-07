@@ -33,7 +33,7 @@ export const menuList = [
   { id: 1, label: "Chat", icon: ChatIcon, path: "chat" },
   { id: 2, label: "Find", icon: FindIcon, path: "home" },
   { id: 3, label: "Loved", icon: LovedIcon, path: "loved" },
-  { id: 4, label: "Settings", icon: SettingsIcon, path: "settings" },
+  { id: 4, label: "Settings", icon: SettingsIcon, path: "setting" },
 ];
 
 export const pageHeadings = {
@@ -41,5 +41,5 @@ export const pageHeadings = {
   "/user-profile": "set your personality",
   "/chat": "chat to spark a connection",
   "/loved": "look your connection",
-  "/settings": "manage your account",
+  "/setting": "manage your account",
 };

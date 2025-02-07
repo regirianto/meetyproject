@@ -13,6 +13,9 @@ import Profile from "./_root/pages/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
 import EditProfile from "./_root/pages/EditProfile";
 import Loved from "./_root/pages/Loved";
+import Chat from "./_root/pages/Chat";
+import ChatList from "./_root/pages/ChatList";
+import Setting from "./_root/pages/Setting";
 
 const App = () => {
   return (
@@ -37,6 +40,9 @@ const App = () => {
           <Route path="/user-profile" element={<Profile />} />
           <Route path="/edit-profile" element={<EditProfile />} />
           <Route path="/loved" element={<Loved />} />
+          <Route path="/chat" element={<ChatList />} />
+          <Route path="/chat/:conversationId" element={<Chat />} />
+          <Route path="/setting" element={<Setting />} />
         </Route>
 
         <Route

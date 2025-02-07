@@ -1,28 +1,58 @@
-import { ChatIcon } from "../../assets/img/icons";
 import { useEffect, useState } from "react";
-import { getLikedYou, getYouLiked } from "../../api";
+import { getLikedYou, getYouLiked, startChat } from "../../api";
+import { useNavigate } from "react-router-dom";
+import ProfileList from "../../components/ProfileList";
 
 const Loved = () => {
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = JSON.parse(localStorage.getItem("user")) || {};
   const [activeTab, setActiveTab] = useState("likedYou");
   const [likedYou, setLikedYou] = useState([]);
   const [youLiked, setYouLiked] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   // Fetch "liked You" & "You Liked"
   useEffect(() => {
+    if (!user.id) return;
+
     const fetchData = async () => {
+      setLoading(true);
       try {
-        const likedYouRes = await getLikedYou(user.id);
-        const youLikedRes = await getYouLiked(user.id);
+        const [likedYouRes, youLikedRes] = await Promise.all([
+          getLikedYou(user.id),
+          getYouLiked(user.id),
+        ]);
         setLikedYou(likedYouRes.data);
         setYouLiked(youLikedRes.data);
       } catch (error) {
-        console.error("❌ Error fetching liked lists:", error);
+        console.error("❌ Error fetching liked you & you liked:", error);
       }
+      setLoading(false);
     };
 
     fetchData();
-  }, [user.id]);
+  }, [user?.id]);
+
+  // ✅ Start a chat with a matched user
+  const handleStartChat = async (matchedUserId) => {
+    console.log("🔍 Received matchedUserId:", matchedUserId); // Debugging
+
+    if (!matchedUserId) {
+      console.error("❌ matchedUserId is undefined!");
+      return;
+    }
+
+    try {
+      const res = await startChat(user.id, matchedUserId);
+      console.log("✅ Chat started, Conversation ID:", res.data.conversationId);
+
+      if (res.data.conversationId) {
+        navigate(`/chat/${res.data.conversationId}`);
+      }
+    } catch (error) {
+      console.error("❌ Error starting chat:", error);
+    }
+  };
 
   return (
     <main className="mt-4">
@@ -54,75 +84,29 @@ const Loved = () => {
         </div>
       </div>
 
-      {/* Content */}
-      {activeTab === "likedYou" && (
-        <div className="w-full grid grid-cols-2 gap-3 mt-6">
-          {likedYou.length > 0 ? (
-            likedYou.map((profile) => (
-              <div
-                key={profile.profile_id}
-                className="w-full h-[200px] rounded-xl overflow-hidden relative"
-              >
-                <img
-                  src={profile.photo_profile || "/default-profile.png"}
-                  alt="profile"
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black from-60% flex justify-between items-end p-4">
-                  <div className="text-white flex flex-col gap-1">
-                    <h4 className="font-medium">{profile.name} 24</h4>
-                    <p className="text-[8px] text-neutral-200 italic">
-                      “{profile.bio}”
-                    </p>
-                  </div>
-                  <div>
-                    <button className="bg-tertiary p-2 rounded-full">
-                      <ChatIcon color="#267F53" />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))
-          ) : (
-            <p className="text-center text-gray-500">No one liked you yet 😢</p>
+      {/* Loading State */}
+      {loading ? (
+        <p className="text-center text-gray-500 mt-6">🔄 Loading...</p>
+      ) : (
+        <>
+          {/* Like you list  */}
+          {activeTab === "likedYou" && (
+            <ProfileList
+              profiles={likedYou}
+              handleStartChat={handleStartChat}
+              message="No one liked you yet 😢"
+            />
           )}
-        </div>
-      )}
 
-      {activeTab === "youLiked" && (
-        <div className="w-full grid grid-cols-2 gap-3 mt-6">
-          {youLiked.length > 0 ? (
-            youLiked.map((profile) => (
-              <div
-                key={profile.profile_id}
-                className="w-full h-[200px] rounded-xl overflow-hidden relative"
-              >
-                <img
-                  src={profile.photo_profile || "/default-profile.png"}
-                  alt="profile"
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black from-60% flex justify-between items-end p-4">
-                  <div className="text-white flex flex-col gap-1">
-                    <h4 className="font-medium">{profile.name} 24</h4>
-                    <p className="text-[8px] text-neutral-200 italic">
-                      “{profile.bio}”
-                    </p>
-                  </div>
-                  <div>
-                    <button className="bg-tertiary p-2 rounded-full">
-                      <ChatIcon color="#267F53" />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))
-          ) : (
-            <p className="text-center text-gray-500">
-              You haven&apos;t liked anyone yet 😅
-            </p>
+          {/* You Liked List */}
+          {activeTab === "youLiked" && (
+            <ProfileList
+              profiles={youLiked}
+              handleStartChat={handleStartChat}
+              message="You haven't liked anyone yet 😅"
+            />
           )}
-        </div>
+        </>
       )}
     </main>
   );

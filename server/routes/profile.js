@@ -132,7 +132,21 @@ router.get("/user-profile/:userId", (req, res) => {
 
   // fetch profile details
   const profileQuery = `
-    SELECT p.id AS profile_id, p.name, DATE_FORMAT(p.birth_date, '%Y-%m-%d') AS birth_date, p.gender, COALESCE(p.bio, 'Add bio') AS bio, COALESCE(p.about, 'Add your profile') AS about, u.phone, u.email, p.last_active_at FROM profiles p JOIN users u ON p.user_id = u.id WHERE p.user_id = ?
+    SELECT p.id AS profile_id, 
+    p.name, 
+    DATE_FORMAT(p.birth_date, '%Y-%m-%d') AS birth_date, 
+    p.gender,
+    COALESCE(p.bio, 'Add bio') AS bio, 
+    COALESCE(p.about, 'Add your profile') AS about, 
+    u.phone, 
+    u.email, 
+    p.last_active_at,
+    COALESCE((SELECT COUNT(*) FROM user_likes WHERE liked_id = p.user_id), 0) AS liked_you_count,
+    COALESCE((SELECT COUNT(*) FROM user_likes WHERE liker_id = p.user_id), 0) AS you_liked_count 
+    FROM profiles p 
+    JOIN users u 
+    ON p.user_id = u.id 
+    WHERE p.user_id = ?
   `;
 
   db.query(profileQuery, [userId], (err, profileResults) => {
@@ -373,107 +387,140 @@ router.get("/home/:userId", (req, res) => {
     const getProfilesQuery = `
       SELECT 
         p.id AS profile_id, 
+        p.user_id,
         p.name, 
         p.gender, 
         p.birth_date, 
         p.bio, 
         p.about, 
-        (SELECT image FROM gallery WHERE profile_id = p.id ORDER BY id ASC LIMIT 1) AS photo_profile 
+        (SELECT image FROM gallery WHERE profile_id = p.id ORDER BY id ASC LIMIT 1) AS photo_profile,
+        CASE
+          WHEN EXISTS (SELECT 1 FROM user_likes WHERE liked_id = p.user_id AND liked_id = ?)
+          THEN 1 ELSE 0
+        END AS liked_you
       FROM profiles p 
-      WHERE p.gender = ? AND p.user_id != ? 
-      ORDER BY RAND() 
+      WHERE p.gender = ? 
+        AND p.user_id != ? 
+        AND p.user_id NOT IN (SELECT liked_id FROM user_likes WHERE liker_id = ?)
+      ORDER BY liked_you DESC, p.id ASC
       LIMIT 10
     `;
 
-    db.query(getProfilesQuery, [targetGender, userId], (err, profiles) => {
-      if (err) {
-        console.error("❌ Database Error (Fetching Profiles):", err.message);
-        return res.status(500).json({ error: err.message });
-      }
-
-      // ✅ Konversi birth_date ke usia
-      const profilesWithAge = profiles.map((profile) => {
-        const birthDate = new Date(profile.birth_date);
-        const today = new Date();
-        let age = today.getFullYear() - birthDate.getFullYear();
-        if (
-          today.getMonth() < birthDate.getMonth() ||
-          (today.getMonth() === birthDate.getMonth() &&
-            today.getDate() < birthDate.getDate())
-        ) {
-          age--;
+    db.query(
+      getProfilesQuery,
+      [userId, targetGender, userId, userId],
+      (err, profiles) => {
+        if (err) {
+          console.error("❌ Database Error (Fetching Profiles):", err.message);
+          return res.status(500).json({ error: err.message });
         }
 
-        return {
-          ...profile,
-          age,
-          photo_profile: profile.photo_profile
-            ? `http://localhost:5000/uploads/${profile.photo_profile}`
-            : null,
-          gallery: [],
-          interests: [],
-        };
-      });
+        // ✅ Konversi birth_date ke usia
+        const profilesWithAge = profiles.map((profile) => {
+          const birthDate = new Date(profile.birth_date);
+          const today = new Date();
+          let age = today.getFullYear() - birthDate.getFullYear();
+          if (
+            today.getMonth() < birthDate.getMonth() ||
+            (today.getMonth() === birthDate.getMonth() &&
+              today.getDate() < birthDate.getDate())
+          ) {
+            age--;
+          }
 
-      // Fetch gallery and interests
-      const profileIds = profilesWithAge.map((p) => p.profile_id);
-      if (profileIds.length === 0) return res.json(profilesWithAge);
+          return {
+            ...profile,
+            age,
+            photo_profile: profile.photo_profile
+              ? `http://localhost:5000/uploads/${profile.photo_profile}`
+              : null,
+            gallery: [],
+            interests: [],
+          };
+        });
 
-      // fetch gallery images
-      const getGalleryQuery = `
+        // Fetch gallery and interests
+        const profileIds = profilesWithAge.map((p) => p.profile_id);
+        if (profileIds.length === 0) return res.json(profilesWithAge);
+
+        // fetch gallery images
+        const getGalleryQuery = `
         SELECT profile_id, image FROM gallery 
         WHERE profile_id IN (?) 
         ORDER BY id ASC
       `;
 
-      db.query(getGalleryQuery, [profileIds], (err, galleryResults) => {
-        if (err) {
-          console.error("❌ Database Error (Fetching Gallery):", err.message);
-          return res.status(500).json({ error: err.message });
-        }
+        db.query(getGalleryQuery, [profileIds], (err, galleryResults) => {
+          if (err) {
+            console.error("❌ Database Error (Fetching Gallery):", err.message);
+            return res.status(500).json({ error: err.message });
+          }
 
-        // Group gallery images by profile_id
-        const galleryMap = {};
-        galleryResults.forEach(({ profile_id, image }) => {
-          if (!galleryMap[profile_id]) galleryMap[profile_id] = [];
-          galleryMap[profile_id].push(`http://localhost:5000/uploads/${image}`);
-        });
+          // Group gallery images by profile_id
+          const galleryMap = {};
+          galleryResults.forEach(({ profile_id, image }) => {
+            if (!galleryMap[profile_id]) galleryMap[profile_id] = [];
+            galleryMap[profile_id].push(
+              `http://localhost:5000/uploads/${image}`
+            );
+          });
 
-        // ✅ Fetch interests
-        const getInterestsQuery = `
+          // ✅ Fetch interests
+          const getInterestsQuery = `
           SELECT ui.profile_id, i.interest_name
           FROM user_interests ui
           JOIN interests i ON ui.interest_id = i.id
           WHERE ui.profile_id IN (?)
         `;
 
-        db.query(getInterestsQuery, [profileIds], (err, interestResults) => {
-          if (err) {
-            console.error(
-              "❌ Database Error (Fetching Interests):",
-              err.message
-            );
-            return res.status(500).json({ error: err.message });
-          }
+          db.query(getInterestsQuery, [profileIds], (err, interestResults) => {
+            if (err) {
+              console.error(
+                "❌ Database Error (Fetching Interests):",
+                err.message
+              );
+              return res.status(500).json({ error: err.message });
+            }
 
-          // Group interests by profile_id
-          const interestMap = {};
-          interestResults.forEach(({ profile_id, interest_name }) => {
-            if (!interestMap[profile_id]) interestMap[profile_id] = [];
-            interestMap[profile_id].push(interest_name);
+            // Group interests by profile_id
+            const interestMap = {};
+            interestResults.forEach(({ profile_id, interest_name }) => {
+              if (!interestMap[profile_id]) interestMap[profile_id] = [];
+              interestMap[profile_id].push(interest_name);
+            });
+
+            // ✅ Merge gallery and interests into profiles
+            const finalProfiles = profilesWithAge.map((profile) => ({
+              ...profile,
+              gallery: galleryMap[profile.profile_id] || [],
+              interests: interestMap[profile.profile_id] || [],
+            }));
+
+            res.json(finalProfiles);
           });
-
-          // ✅ Merge gallery and interests into profiles
-          const finalProfiles = profilesWithAge.map((profile) => ({
-            ...profile,
-            gallery: galleryMap[profile.profile_id] || [],
-            interests: interestMap[profile.profile_id] || [],
-          }));
-
-          res.json(finalProfiles);
         });
-      });
-    });
+      }
+    );
+  });
+});
+
+// Delete account
+router.delete("/delete-account/:userId", (req, res) => {
+  const { userId } = req.params;
+
+  // SQL query to delete the user from the profiles and users table
+  const deleteUserQuery = `
+    DELETE FROM profiles WHERE user_id = ?;
+    DELETE FROM users WHERE id = ?;
+  `;
+
+  db.query(deleteUserQuery, [userId, userId], (err, result) => {
+    if (err) {
+      console.error("❌ Database Error (Delete Account):", err.message);
+      return res.status(500).json({ error: err.message });
+    }
+
+    res.status(200).json({ message: "Account deleted successfully." });
   });
 });
 

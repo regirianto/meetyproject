@@ -17,16 +17,6 @@ const Home = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const user = JSON.parse(localStorage.getItem("user"));
   const [profiles, setProfiles] = useState([]);
-  const [currentProfileIndex, setCurrentProfileIndex] = useState(0);
-
-  // Shuffle array
-  const shuffleArray = (array) => {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]]; // Swap elements
-    }
-    return array;
-  };
 
   // ✅ Fetch daftar profil lawan jenis saat halaman dimuat
   useEffect(() => {
@@ -34,8 +24,7 @@ const Home = () => {
       try {
         const res = await getHomeProfiles(user.id);
         console.log("API Response:", res); // Log the entire response
-        const shuffledProfiles = shuffleArray(res.data);
-        setProfiles(shuffledProfiles); // Access data only if res is defined
+        setProfiles(res.data); // Access data only if res is defined
       } catch (error) {
         console.error("❌ Error fetching home profiles:", error);
       }
@@ -54,31 +43,29 @@ const Home = () => {
 
   // Handle swipe left (skip)
   const handleSkip = () => {
-    // If at the last profile, reset to the first profile
-    if (currentProfileIndex < profiles.length - 1) {
-      setCurrentProfileIndex((prev) => prev + 1);
-    } else {
-      // Reset to the first profile
-      setCurrentProfileIndex(0);
-    }
+    if (profiles.length === 0) return;
+    setProfiles((prev) => prev.slice(1));
   };
 
   // ✅ Handle swipe right (Like)
   const handleLike = async () => {
+    if (profiles.length === 0) return;
+
+    const likedUserId = profiles[0]?.user_id;
+    const likerId = user.id;
+
+    console.log("🔍 Liking user:", { likerId, likedUserId }); // Debugging
+
+    if (!likedUserId) return;
+
     try {
-      const likedUserId = profiles[currentProfileIndex]?.profile_id;
-      if (!likedUserId) return;
-
       console.log("💖 Liking user:", likedUserId);
-      console.log("🆔 Current User ID: ", user.id);
-
       const response = await likeUser(user.id, likedUserId);
       console.log("✅ Like Response:", response.data);
-
-      handleSkip();
     } catch (error) {
       console.error("❌ Error liking user:", error);
     }
+    handleSkip();
   };
 
   // ✅ Jika tidak ada profil, tampilkan loading
@@ -87,7 +74,7 @@ const Home = () => {
   }
 
   // ✅ Ambil profil saat ini
-  const currentProfile = profiles[currentProfileIndex];
+  const currentProfile = profiles[0];
 
   return (
     <main className="mt-4">

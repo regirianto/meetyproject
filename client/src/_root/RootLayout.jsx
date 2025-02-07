@@ -6,14 +6,6 @@ const RootLayout = () => {
   // Log out function
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    localStorage.removeItem("profileId");
-    localStorage.clear();
-    navigate("/sign-in");
-  };
-
   // Menu bar active
   const location = useLocation();
 
@@ -27,14 +19,6 @@ const RootLayout = () => {
         <div>
           <img src={logo} alt="logo" />
         </div>
-
-        {/* Log out button */}
-        <button
-          onClick={handleLogout}
-          className="bg-red-500 px-4 py-2 rounded text-white"
-        >
-          Logout
-        </button>
 
         <div className="w-36">
           <h4 className="font-secondary w-full uppercase text-right text-primary font-bold">

@@ -58,11 +58,15 @@ const Profile = () => {
         {/* Loved & Be Loved */}
         <div className="flex gap-10 tracking-tight mt-4">
           <div className="flex flex-col items-center gap-1">
-            <h4 className="text-[#F146DD] font-medium">5</h4>
+            <h4 className="text-[#F146DD] font-medium">
+              {profile.liked_you_count ?? 0}
+            </h4>
             <p className="text-sm">Liked You</p>
           </div>
           <div className="flex flex-col items-center gap-1">
-            <h4 className="text-[#F17146] font-medium">11</h4>
+            <h4 className="text-[#F17146] font-medium">
+              {profile.you_liked_count ?? 0}
+            </h4>
             <p className="text-sm">You Liked</p>
           </div>
         </div>

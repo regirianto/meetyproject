@@ -24,6 +24,17 @@ export const updateUserProfile = (userId, data) =>
   });
 export const getHomeProfiles = (userId) => API.get(`/profile/home/${userId}`);
 export const likeUser = (likerId, likedId) =>
-  API.post(`likes/like`, { likerId, likedId });
+  API.post(`/likes/like`, { likerId, likedId });
 export const getLikedYou = (userId) => API.get(`likes/liked-you/${userId}`);
 export const getYouLiked = (userId) => API.get(`likes/you-liked/${userId}`);
+export const sendMessage = async (conversationId, senderId, text) =>
+  await API.post(`/chat/messages/`, { conversationId, senderId, text });
+export const getMessages = async (conversationId) =>
+  await API.get(`/chat/messages/${conversationId}`);
+
+// ✅ Get chat list (conversations)
+export const getChats = (userId) => API.get(`/chat/chats/${userId}`);
+
+// ✅ Start a new conversation
+export const startChat = (user1Id, user2Id) =>
+  API.post(`/chat/start-chat`, { user1Id, user2Id });
