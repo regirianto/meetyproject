@@ -13,7 +13,7 @@ const app = express();
 const allowedOrigin = "https://meety-frontend-beta.vercel.app";
 app.use(
   cors({
-    origin: allowedOrigin,
+    origin: true, // Allow all origins
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
