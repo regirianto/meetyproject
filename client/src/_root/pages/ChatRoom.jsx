@@ -7,11 +7,10 @@ const ChatRoom = () => {
   const profile = location.state?.profile || {}; // Ensure we get a valid object
 
   console.log("📩 Profile Data in Chat Room:", profile); // ✅ Debug log
-  const [messages, setMessages] = useState([
-    { id: 1, text: "Hey there! 😊", sender: "Anna", time: new Date() },
-  ]);
+  const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const chatEndRef = useRef(null);
+  const [botResponseIndex, setBotResponseIndex] = useState(0);
 
   // Auto-scroll to latest message
   useEffect(() => {
@@ -37,6 +36,18 @@ const ChatRoom = () => {
     return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   };
 
+  const botResponse = [
+    "Hai juga",
+    "Tell me more! 😊",
+    "Sounds interesting! 😃",
+    "Wow, really? 🤩",
+    "I didn't know that! 🤔",
+    "That's cool! 🔥",
+    "Haha, that's funny! 😂",
+  ];
+
+  const botReplyTimeout = useRef(null); // ✅ Simpan timeout agar tidak duplikasi
+
   const sendMessage = (e) => {
     e.preventDefault();
     if (!input.trim()) return;
@@ -47,18 +58,33 @@ const ChatRoom = () => {
       sender: "You",
       time: new Date(),
     };
-    setMessages((prev) => [...prev, newMessage]);
+
+    setMessages((prev) => [...prev, newMessage]); // ✅ Tambahkan pesan user
     setInput("");
 
-    // Simulate a chatbot response after 1.5 seconds
-    setTimeout(() => {
-      const botResponse = {
-        id: Date.now(),
-        text: "That sounds interesting! 😃",
-        sender: "Anna",
-        time: new Date(),
-      };
-      setMessages((prev) => [...prev, botResponse]);
+    // ✅ Jika timeout masih berjalan, hentikan dulu
+    if (botReplyTimeout.current) clearTimeout(botReplyTimeout.current);
+
+    // ✅ Pastikan hanya ada 1 timeout berjalan
+    botReplyTimeout.current = setTimeout(() => {
+      setBotResponseIndex((prevIndex) => {
+        const nextIndex = prevIndex % botResponse.length;
+        const nextReply = botResponse[nextIndex];
+
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: Date.now(),
+            text: nextReply,
+            sender: profile.name || "Anna",
+            time: new Date(),
+          },
+        ]);
+
+        return prevIndex + 1; // ✅ Update indeks hanya sekali
+      });
+
+      botReplyTimeout.current = null; // ✅ Hapus timeout setelah selesai
     }, 1500);
   };
 

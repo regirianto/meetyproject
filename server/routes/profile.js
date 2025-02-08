@@ -89,39 +89,28 @@ const upload = multer({ storage });
 router.post("/set-photo", upload.array("photos", 6), (req, res) => {
   const { profileId } = req.body;
 
-  if (!profileId || !req.files || !req.files.length === 0) {
+  // Check if profileId is provided and if files are uploaded
+  if (!profileId || !req.files || req.files.length === 0) {
     return res.status(400).json({ error: "Please select a photo" });
   }
 
-  // Extract file path
+  // Extract file paths from uploaded files
   const photoPaths = req.files.map((file) => file.filename);
 
-  // insert all photo into gallery table
+  // Prepare values for bulk insert into the gallery table
   const values = photoPaths.map((photoPath) => [profileId, photoPath]);
   const query = "INSERT INTO gallery (profile_id, image) VALUES ?";
 
+  // Insert the photos into the gallery
   db.query(query, [values], (err, result) => {
     if (err) return res.status(500).json({ error: err.message });
 
-    // If this is the first upload, set the first image as profile photo
-    const checkProfilePhotoQuery = `SELECT image FROM gallery WHERE profile_id = ? ORDER BY id ASC LIMIT 1`;
-    db.query(checkProfilePhotoQuery, [profileId], (err, photoResults) => {
-      if (err) return res.status(500).json({ error: err.message });
-
-      if (photoResults.length > 0) {
-        const firstPhoto = photoResults[0].image;
-        const setProfilePhotoQuery = `
-          UPDATE profiles SET photo_profile = ? WHERE id = ?
-        `;
-        db.query(setProfilePhotoQuery, [firstPhoto, profileId], (err) => {
-          if (err) return res.status(500).json({ error: err.message });
-        });
-      }
-      res.status(201).json({
-        message: "Photo Uploaded!",
-        uploadedFiles: photoPaths,
-        profilePhoto: `http://localhost:5000/uploads/${firstPhoto}`,
-      });
+    // Respond with success message and uploaded file paths
+    res.status(201).json({
+      message: "Photos Uploaded!",
+      uploadedFiles: photoPaths.map(
+        (filename) => `http://localhost:5000/uploads/${filename}`
+      ), // Return full URLs
     });
   });
 });

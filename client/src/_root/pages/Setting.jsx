@@ -1,9 +1,15 @@
 import ChevronRightIcon from "../../assets/img/icons/ChevronRightIcon";
-import KeyIcon from "../../assets/img/icons/KeyIcon";
-import TrashIcon from "../../assets/img/icons/TrashIcon";
 import LogoutIcon from "../../assets/img/icons/LogoutIcon";
 import { useNavigate } from "react-router-dom";
 import SettingItem from "../../components/SettingItem";
+import UpdateIcon from "../../assets/img/icons/UpdateIcon";
+import LanguageIcon from "../../assets/img/icons/LanguageIcon";
+import ThemeIcon from "../../assets/img/icons/ThemeIcon";
+import AboutIcon from "../../assets/img/icons/AboutIcon";
+import NotificationIcon from "../../assets/img/icons/NotificationIcon";
+import PrivacyIcon from "../../assets/img/icons/PrivacyIcon";
+import SecurityIcon from "../../assets/img/icons/SecurityIcon";
+import HelpIcon from "../../assets/img/icons/HelpIcon";
 
 const Setting = () => {
   const navigate = useNavigate();
@@ -18,47 +24,47 @@ const Setting = () => {
 
   return (
     <main className="mt-4 tracking-tight">
-      <div className="flex flex-col">
+      <div className="flex flex-col px-4">
         <h1 className="font-semibold mb-2 text-lg">Application</h1>
         <SettingItem
-          icon={KeyIcon}
+          icon={UpdateIcon}
           label="App Update"
           rightIcon={ChevronRightIcon}
         />
         <SettingItem
-          icon={KeyIcon}
+          icon={LanguageIcon}
           label="Language"
           rightIcon={ChevronRightIcon}
         />
         <SettingItem
-          icon={KeyIcon}
+          icon={ThemeIcon}
           label="Theme"
           rightIcon={ChevronRightIcon}
         />
         <SettingItem
-          icon={KeyIcon}
+          icon={AboutIcon}
           label="About"
           rightIcon={ChevronRightIcon}
         />
 
         <h1 className="font-semibold mt-4 mb-2 text-lg">Account & Security</h1>
         <SettingItem
-          icon={TrashIcon}
+          icon={PrivacyIcon}
           label="Privacy"
           rightIcon={ChevronRightIcon}
         />
         <SettingItem
-          icon={TrashIcon}
+          icon={NotificationIcon}
           label="Notification"
           rightIcon={ChevronRightIcon}
         />
         <SettingItem
-          icon={TrashIcon}
+          icon={SecurityIcon}
           label="Security"
           rightIcon={ChevronRightIcon}
         />
         <SettingItem
-          icon={TrashIcon}
+          icon={HelpIcon}
           label="Help & Support"
           rightIcon={ChevronRightIcon}
         />

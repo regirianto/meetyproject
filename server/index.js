@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 const allowedOrigins = [
   "meety-frontend-beta.vercel.app",
-  "http://localhost:3000",
+  "http://localhost:5173",
 ];
 
 app.use(
@@ -29,6 +29,8 @@ app.use(
     credentials: true,
   })
 );
+
+app.options("*", cors());
 
 // Routes
 app.use("/api/auth", authRoutes);

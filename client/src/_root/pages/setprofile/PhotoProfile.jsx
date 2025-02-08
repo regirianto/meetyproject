@@ -39,22 +39,6 @@ const PhotoProfile = () => {
     }
   };
 
-  const handleRemove = (index) => {
-    // Remove from preview
-    setFiles((prevFiles) => {
-      const newFiles = [...prevFiles];
-      newFiles[index] = null;
-      return newFiles;
-    });
-
-    // Remove from actual selected
-    setSelectedFiles((prevSelected) => {
-      const newSelected = [...prevSelected];
-      newSelected[index] = null;
-      return newSelected;
-    });
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -100,15 +84,6 @@ const PhotoProfile = () => {
                 key={index}
                 className="bg-tertiary border-2 border-primary border-dashed rounded-md overflow-hidden aspect-square flex justify-center items-center"
               >
-                {/* Remove button */}
-                <button
-                  type="button"
-                  onClick={() => handleRemove(index)}
-                  className="absolute top-1 right-1 bg-white text-red-500 rounded-full p-1 shadow-md hover:bg-red-500 hover:text-white transition"
-                >
-                  ❌
-                </button>
-
                 {/* Preview Box */}
                 <button onClick={() => handleButtonPhoto(index)} type="button">
                   {/* Show PlusIcon when no file is selected */}
