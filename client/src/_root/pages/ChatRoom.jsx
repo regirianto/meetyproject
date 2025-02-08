@@ -37,13 +37,10 @@ const ChatRoom = () => {
   };
 
   const botResponse = [
-    "Hai juga",
-    "Tell me more! 😊",
-    "Sounds interesting! 😃",
-    "Wow, really? 🤩",
-    "I didn't know that! 🤔",
-    "That's cool! 🔥",
-    "Haha, that's funny! 😂",
+    "Hai, begitupun aku!",
+    "Aku domisili Depok, ni! Kamu domisi mana?",
+    "Hahaha bener banget!! oh Bekasi yang katanya kota deket dengan Matahari itu??",
+    "Lucu banget gini, kita mutual Whatsapp aja yuk gimana??",
   ];
 
   const botReplyTimeout = useRef(null); // ✅ Simpan timeout agar tidak duplikasi

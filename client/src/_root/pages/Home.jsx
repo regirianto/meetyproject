@@ -99,9 +99,6 @@ const Home = () => {
 
             <div className="flex justify-between items-end">
               <div className="flex flex-col gap-2">
-                <span className="bg-tertiary w-max text-primary border-2 border-primary text-sm italic font-medium px-2 py-1 rounded-full">
-                  Photography
-                </span>
                 <div className="flex flex-col gap-4">
                   <h3 className="text-3xl font-medium">
                     {currentProfile.name}, {currentProfile.age}
