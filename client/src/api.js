@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://meetyprojectv2-production.up.railway.app/api",
+  baseURL: "https://meety-server.vercel.app/api",
   headers: { "Content-Type": "application/json" },
 });
 
