@@ -8,8 +8,16 @@
   ],
   "routes": [
     {
-      "src": "/(.*)",
+      "src": "/api/(.*)",
       "dest": "index.js"
     }
-  ]
+  ],
+  "env": {
+    "DB_HOST": "critiaz.my.id",
+    "DB_USER": "dkyyoacr_meety",
+    "DB_PASSWORD": "b+D01+y!=eKk",
+    "DB_NAME": "dkyyoacr_meety",
+    "DB_PORT": "3306",
+    "JWT": "cddfe8338bcfab1c2b7e99a38fe01a8b9893a8a1814160563d510ad7185d47b917bb22a20f9be88b9af10ae1ce1105b6480e39206e55261c1039f8cae8590051"
+  }
 }
